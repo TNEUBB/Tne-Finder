@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador TNE UBB</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1e88e5"> 
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .btn-accion {
+            background: linear-gradient(145deg, #1e88e5, #005cb2);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            transition: all 0.2s;
+        }
+        .btn-accion:hover {
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2), 0 3px 5px rgba(0, 0, 0, 0.12);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-md bg-white p-6 md:p-8 rounded-xl shadow-2xl">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">
+            Buscador TNE UBB
+        </h1>
+        <p class="text-center text-sm text-gray-500 mb-6">
+            Ingresa el nombre del pase perdido y tu contacto para generar el borrador.
+        </p>
+
+        <div class="space-y-4">
+            <h2 class="text-xl font-semibold text-gray-700 pt-2 border-t mt-4">1. Datos del Pase Perdido</h2>
+            
+            <label class="block">
+                <span class="text-gray-700 font-medium">Nombre en el Pase:</span>
+                <input type="text" id="nombre" placeholder="Ej: Juan" 
+                       class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 transition duration-150">
+            </label>
+
+            <label class="block">
+                <span class="text-gray-700 font-medium">Apellido en el Pase:</span>
+                <input type="text" id="apellido" placeholder="Ej: Pérez" 
+                       class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 transition duration-150">
+            </label>
+
+            <h2 class="text-xl font-semibold text-gray-700 pt-2 border-t mt-4">2. Tu Contacto (Para la Devolución)</h2>
+
+            <label class="block">
+                <span class="text-gray-700 font-medium">Tu Nombre Completo:</span>
+                <input type="text" id="tuNombre" placeholder="Tu nombre para firmar el correo" 
+                       class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 transition duration-150">
+            </label>
+            
+            <label class="block">
+                <span class="text-gray-700 font-medium">Tu Teléfono o WhatsApp:</span>
+                <input type="tel" id="tuContacto" placeholder="+56 9 XXXX XXXX" 
+                       class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 transition duration-150">
+            </label>
+        </div>
+
+        <div id="contactMessage" class="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-500 text-sm text-yellow-800 rounded-lg">
+            <p class="font-semibold">¡Listo!</p>
+            <p>El borrador se generará con tu teléfono y nombre ya insertados. Solo deberás **presionar Enviar** en tu aplicación de correo.</p>
+        </div>
+
+        <button id="btnGenerar" onclick="generarCorreo()"
+                class="btn-accion mt-6 w-full text-white font-semibold py-3 rounded-xl uppercase tracking-wider hover:opacity-90">
+            Generar Borrador de Correo UBB
+        </button>
+
+        <div id="mensaje" class="mt-4 text-center hidden"></div>
+    </div>
+
+    <script>
+        function mostrarMensaje(texto, tipo = 'error') {
+            const mensajeDiv = document.getElementById('mensaje');
+            mensajeDiv.textContent = texto;
+            mensajeDiv.className = `mt-4 p-3 rounded-lg text-sm font-medium ${tipo === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`;
+            mensajeDiv.classList.remove('hidden');
+        }
+
+        function generarCorreo() {
+            const nombrePase = document.getElementById('nombre').value.trim();
+            const apellidoPase = document.getElementById('apellido').value.trim();
+            const tuNombre = document.getElementById('tuNombre').value.trim();
+            const tuContacto = document.getElementById('tuContacto').value.trim();
+            
+            const mensajeDiv = document.getElementById('mensaje');
+            mensajeDiv.classList.add('hidden');
+
+            if (!nombrePase || !apellidoPase || !tuNombre || !tuContacto) {
+                mostrarMensaje("Por favor, completa todos los campos para generar el borrador.", 'error');
+                return;
+            }
+
+            // --- 1. Generación de Correos (Patrón UBB) ---
+            const nombreLimpio = nombrePase.toLowerCase().replace(/\s/g, '');
+            const apellidoLimpio = apellidoPase.toLowerCase().replace(/\s/g, '');
+            
+            const anoActual = 2025;
+            const anoInicial = 2020;
+            let destinatarios = [];
+
+            for (let ano = anoActual; ano >= anoInicial; ano--) {
+                const anoDosDigitos = ano % 100;
+                destinatarios.push(`${nombreLimpio}.${apellidoLimpio}${anoDosDigitos}01@alumnos.ubiobio.cl`);
+            }
+
+            const destinatariosString = destinatarios.join(';');
+            
+            // --- 2. Redacción del Mensaje con Datos Inyectados ---
+            const asunto = `¡ENCONTRÉ TU TNE (Pase Escolar UBB)! - Contacto Urgente`;
+            
+            // Inyectamos el nombre del pase y el contacto del usuario directamente
+            const cuerpo = `Hola,
+            
+He encontrado tu Pase Escolar (TNE) de la UBB.
+            
+Nombre en el pase: ${nombrePase} ${apellidoPase}
+            
+Para coordinar la devolución lo antes posible, por favor contáctame a la información que dejo a continuación.
+            
+---
+CONTACTO PARA LA DEVOLUCIÓN:
+Persona que lo encontró: ${tuNombre}
+Teléfono / WhatsApp: ${tuContacto}
+---
+            
+Saludos cordiales.`;
+
+            // Codificación de URL y Creación del enlace mailto:
+            const asuntoCodificado = encodeURIComponent(asunto);
+            const cuerpoCodificado = encodeURIComponent(cuerpo);
+            
+            const mailtoLink = `mailto:${destinatariosString}?subject=${asuntoCodificado}&body=${cuerpoCodificado}`;
+            
+            // Abrir el enlace (lanza el cliente de correo por defecto)
+            window.location.href = mailtoLink;
+
+            mostrarMensaje("Borrador generado con éxito. Abre tu aplicación de correo y presiona Enviar.", 'success');
+        }
+    </script>
+
+</body>
+</html>
