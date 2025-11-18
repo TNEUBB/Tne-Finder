@@ -7,25 +7,39 @@
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#1e88e5"> 
-
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="theme-color" content="#004a80"> <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* Definición de los colores UBB */
+        .color-ubb-main {
+            background-color: #004a80; /* Azul oscuro principal */
+            color: white;
+        }
+        .text-ubb-main {
+            color: #004a80;
+        }
+
+        /* Estilos del Botón Azul UBB */
         .btn-accion {
-            background: linear-gradient(145deg, #1e88e5, #005cb2);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            /* Gradiente de azul UBB más oscuro a más claro */
+            background: linear-gradient(145deg, #004a80, #006093); 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1);
             transition: all 0.2s;
         }
         .btn-accion:hover {
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2), 0 3px 5px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3), 0 3px 5px rgba(0, 0, 0, 0.15);
             transform: translateY(-1px);
+        }
+        
+        /* Ajuste para que el fondo se vea limpio */
+        .min-h-screen {
+            background-color: #f0f4f8; /* Un fondo muy ligero, casi blanco */
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+<body class="min-h-screen flex items-center justify-center p-4">
 
-    <div class="w-full max-w-md bg-white p-6 md:p-8 rounded-xl shadow-2xl">
-        <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">
+    <div class="w-full max-w-md bg-white p-6 md:p-8 rounded-xl shadow-2xl border-t-8 border-[#004a80]">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-2 text-ubb-main">
             Buscador TNE UBB
         </h1>
         <p class="text-center text-sm text-gray-500 mb-6">
@@ -33,38 +47,38 @@
         </p>
 
         <div class="space-y-4">
-            <h2 class="text-xl font-semibold text-gray-700 pt-2 border-t mt-4">1. Datos del Pase Perdido</h2>
+            <h2 class="text-xl font-semibold text-gray-700 pt-2 border-t mt-4 text-ubb-main">1. Pase Perdido</h2>
             
             <label class="block">
                 <span class="text-gray-700 font-medium">Nombre en el Pase:</span>
                 <input type="text" id="nombre" placeholder="Ej: Juan" 
-                       class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 transition duration-150">
+                       class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:border-[#004a80] focus:ring focus:ring-[#004a80] focus:ring-opacity-50 transition duration-150">
             </label>
 
             <label class="block">
                 <span class="text-gray-700 font-medium">Apellido en el Pase:</span>
                 <input type="text" id="apellido" placeholder="Ej: Pérez" 
-                       class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 transition duration-150">
+                       class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:border-[#004a80] focus:ring focus:ring-[#004a80] focus:ring-opacity-50 transition duration-150">
             </label>
 
-            <h2 class="text-xl font-semibold text-gray-700 pt-2 border-t mt-4">2. Tu Contacto (Para la Devolución)</h2>
+            <h2 class="text-xl font-semibold text-gray-700 pt-2 border-t mt-4 text-ubb-main">2. Tu Contacto</h2>
 
             <label class="block">
                 <span class="text-gray-700 font-medium">Tu Nombre Completo:</span>
                 <input type="text" id="tuNombre" placeholder="Tu nombre para firmar el correo" 
-                       class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 transition duration-150">
+                       class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:border-[#004a80] focus:ring focus:ring-[#004a80] focus:ring-opacity-50 transition duration-150">
             </label>
             
             <label class="block">
                 <span class="text-gray-700 font-medium">Tu Teléfono o WhatsApp:</span>
                 <input type="tel" id="tuContacto" placeholder="+56 9 XXXX XXXX" 
-                       class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 transition duration-150">
+                       class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:border-[#004a80] focus:ring focus:ring-[#004a80] focus:ring-opacity-50 transition duration-150">
             </label>
         </div>
 
-        <div id="contactMessage" class="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-500 text-sm text-yellow-800 rounded-lg">
-            <p class="font-semibold">¡Listo!</p>
-            <p>El borrador se generará con tu teléfono y nombre ya insertados. Solo deberás **presionar Enviar** en tu aplicación de correo.</p>
+        <div id="contactMessage" class="mt-6 p-4 bg-blue-50 border-l-4 border-[#004a80] text-sm text-gray-800 rounded-lg">
+            <p class="font-semibold text-ubb-main">¡Atención!</p>
+            <p>El borrador se generará listo para enviar. Asegúrate de tener una cuenta de correo configurada.</p>
         </div>
 
         <button id="btnGenerar" onclick="generarCorreo()"
